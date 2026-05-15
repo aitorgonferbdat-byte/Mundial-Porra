@@ -5,10 +5,11 @@ import Bracket from './components/Bracket';
 import Submission from './components/Submission';
 import Leaderboard from './components/Leaderboard';
 import AdminPanel from './components/AdminPanel';
+import Rules from './components/Rules';
 import { GROUP_MATCHES, KNOCKOUT_BRACKET } from './data/teams';
 
 function App() {
-  const [step, setStep] = useState('registration'); // registration, groups, bracket, submission, leaderboard, admin
+  const [step, setStep] = useState('registration'); // registration, groups, bracket, submission, leaderboard, admin, rules
   const [userData, setUserData] = useState(null);
   const [groupMatches, setGroupMatches] = useState(GROUP_MATCHES);
   const [bracket, setBracket] = useState(KNOCKOUT_BRACKET);
@@ -59,7 +60,12 @@ function App() {
             >
               Clasificación
             </span>
-            <span className="text-white/80 hover:text-white cursor-pointer transition-colors text-sm font-black uppercase tracking-widest">Reglas</span>
+            <span 
+              onClick={() => setStep('rules')}
+              className={`cursor-pointer transition-colors text-sm font-black uppercase tracking-widest ${step === 'rules' ? 'text-vibrant-red' : 'text-white/80 hover:text-white'}`}
+            >
+              Reglas
+            </span>
           </nav>
         </div>
       </header>
@@ -103,6 +109,10 @@ function App() {
 
           {step === 'admin' && (
             <AdminPanel />
+          )}
+
+          {step === 'rules' && (
+            <Rules />
           )}
 
           {/* Footer / Admin Link */}
