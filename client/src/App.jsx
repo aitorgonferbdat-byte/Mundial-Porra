@@ -37,32 +37,35 @@ function App() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-navy py-4 px-6 shadow-lg sticky top-0 z-50">
+      <header className="bg-navy py-8 px-8 shadow-2xl sticky top-0 z-50 border-b-4 border-vibrant-red">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="bg-white p-1 rounded cursor-pointer shadow-sm hover:shadow-md transition-shadow" onClick={() => setStep('registration')}>
-              <img src="/logo.png" alt="Mundial 2026" className="h-10" />
+          <div className="flex items-center gap-6">
+            <div className="bg-white p-2 rounded-xl cursor-pointer shadow-lg hover:scale-105 transition-transform" onClick={() => setStep('registration')}>
+              <img src="/logo.png" alt="Mundial 2026" className="h-20" />
             </div>
-            <h1 className="text-white font-outfit text-xl font-bold uppercase tracking-wider cursor-pointer" onClick={() => setStep('registration')}>
-              Mundial <span className="text-vibrant-red">Porra</span> 2026
-            </h1>
+            <div className="flex flex-col">
+              <h1 className="text-white font-outfit text-3xl md:text-4xl font-black uppercase tracking-tighter leading-none cursor-pointer" onClick={() => setStep('registration')}>
+                Mundial <span className="text-vibrant-red">Porra</span>
+              </h1>
+              <span className="text-white/40 font-black text-xl tracking-[0.3em] uppercase">2026</span>
+            </div>
           </div>
-          <nav className="hidden md:flex items-center gap-6">
+          <nav className="hidden lg:flex items-center gap-10">
             <span 
               onClick={() => setStep('registration')}
-              className={`cursor-pointer transition-colors text-sm font-black uppercase tracking-widest ${step === 'registration' ? 'text-vibrant-red' : 'text-white/80 hover:text-white'}`}
+              className={`cursor-pointer transition-all text-lg font-black uppercase tracking-widest hover:scale-110 ${step === 'registration' ? 'text-vibrant-red border-b-4 border-vibrant-red' : 'text-white/80 hover:text-white'}`}
             >
               Participar
             </span>
             <span 
               onClick={() => setStep('leaderboard')}
-              className={`cursor-pointer transition-colors text-sm font-black uppercase tracking-widest ${step === 'leaderboard' ? 'text-vibrant-red' : 'text-white/80 hover:text-white'}`}
+              className={`cursor-pointer transition-all text-lg font-black uppercase tracking-widest hover:scale-110 ${step === 'leaderboard' ? 'text-vibrant-red border-b-4 border-vibrant-red' : 'text-white/80 hover:text-white'}`}
             >
               Clasificación
             </span>
             <span 
               onClick={() => setStep('rules')}
-              className={`cursor-pointer transition-colors text-sm font-black uppercase tracking-widest ${step === 'rules' ? 'text-vibrant-red' : 'text-white/80 hover:text-white'}`}
+              className={`cursor-pointer transition-all text-lg font-black uppercase tracking-widest hover:scale-110 ${step === 'rules' ? 'text-vibrant-red border-b-4 border-vibrant-red' : 'text-white/80 hover:text-white'}`}
             >
               Reglas
             </span>
