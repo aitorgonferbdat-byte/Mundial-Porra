@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { Trophy, CheckCircle, XCircle, Download } from 'lucide-react';
-import { api } from '../utils/api';
+import { api, storage } from '../utils/api';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -30,7 +30,7 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
     setError('');
 
     try {
-      // Prepare match results (combine group and knockout matches)
+      // Prepare match results
       const matchResults = {
         groups: groupMatches,
         knockout: bracket
@@ -42,8 +42,12 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
         ? bracket.final[0]?.awayTeam 
         : bracket.final[0]?.homeTeam;
 
-      const response = await api.submitPrediction({
-        userId: userData.userId,
+      // Save prediction to localStorage
+      storage.savePrediction({ matchResults, champion, runnerUp, user: userData });
+
+      // Send email via serverless function
+      const response = await api.sendPrediction({
+        user: userData,
         matchResults,
         champion,
         runnerUp
@@ -51,12 +55,18 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
 
       if (response.success) {
         setSuccess(true);
-        setTimeout(() => onComplete(), 3000);
+        setTimeout(() => onComplete(), 5000);
       } else {
-        setError(response.error || 'Error al enviar la predicción');
+        // Even if email fails, prediction is saved locally
+        console.warn('Email sending failed:', response.error);
+        setSuccess(true);
+        setTimeout(() => onComplete(), 5000);
       }
     } catch (err) {
-      setError('Error de conexión. Inténtalo de nuevo.');
+      // Even on network error, prediction is saved in localStorage
+      console.warn('Network error, but prediction saved locally:', err);
+      setSuccess(true);
+      setTimeout(() => onComplete(), 5000);
     } finally {
       setLoading(false);
     }

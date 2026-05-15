@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { User, Mail, Trophy } from 'lucide-react';
+import { storage } from '../utils/api';
 
 const Registration = ({ onComplete }) => {
   const [formData, setFormData] = useState({
@@ -16,21 +17,17 @@ const Registration = ({ onComplete }) => {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/users/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        onComplete({ ...formData, userId: data.userId });
-      } else {
-        setError(data.error || 'Error en el registro');
+      if (!formData.name || !formData.nickname || !formData.email) {
+        setError('Todos los campos son obligatorios');
+        setLoading(false);
+        return;
       }
+
+      // Save user to localStorage
+      const user = storage.saveUser(formData);
+      onComplete(user);
     } catch (err) {
-      setError('Error de conexión. Inténtalo de nuevo.');
+      setError('Error inesperado. Inténtalo de nuevo.');
     } finally {
       setLoading(false);
     }

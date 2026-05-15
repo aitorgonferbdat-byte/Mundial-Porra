@@ -1,23 +1,9 @@
 {
   "name": "mundial-porra",
   "version": "1.0.0",
-  "description": "World Cup betting system with automated bracket",
-  "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "server": "node server.js",
-    "client": "cd client && npm run dev",
-    "install-all": "npm install && cd client && npm install"
-  },
+  "description": "World Cup betting system - Porra del Mundial 2026",
+  "private": true,
   "dependencies": {
-    "better-sqlite3": "^9.2.2",
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "dotenv": "^17.4.2",
-    "express": "^4.18.2",
-    "nodemailer": "^8.0.7",
-    "puppeteer": "^24.43.1"
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+    "nodemailer": "^8.0.7"
   }
 }
