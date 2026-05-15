@@ -8,7 +8,7 @@ import {
   isBracketComplete,
   getFinalists
 } from '../utils/bracketLogic';
-import { getFlag } from '../utils/flags';
+import Flag from './Flag';
 
 const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
   const [qualifiedTeams, setQualifiedTeams] = useState({});
@@ -59,7 +59,7 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
         <div className="space-y-2">
           {/* Home Team */}
           <div className="flex items-center justify-between gap-2">
-            <span className="text-lg leading-none">{getFlag(match.homeTeam)}</span>
+            <Flag team={match.homeTeam} />
             <span className={`text-sm font-medium flex-1 ${
               winner === match.homeTeam ? 'text-accent' : 'text-text'
             }`}>
@@ -78,7 +78,7 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
           
           {/* Away Team */}
           <div className="flex items-center justify-between gap-2">
-            <span className="text-lg leading-none">{getFlag(match.awayTeam)}</span>
+            <Flag team={match.awayTeam} />
             <span className={`text-sm font-medium flex-1 ${
               winner === match.awayTeam ? 'text-accent' : 'text-text'
             }`}>
@@ -220,14 +220,18 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="text-center p-6 bg-gold/10 rounded-lg">
-                <div className="text-4xl mb-2">{getFlag(finalists.champion) || '🥇'}</div>
+                <div className="flex justify-center mb-2">
+                  <Flag team={finalists.champion} className="w-16 h-10" />
+                </div>
                 <div className="text-textMuted text-sm mb-1">Campeón</div>
                 <div className="font-montserrat text-2xl font-bold text-gold">
                   {finalists.champion}
                 </div>
               </div>
               <div className="text-center p-6 bg-surfaceLight rounded-lg">
-                <div className="text-4xl mb-2">{getFlag(finalists.runnerUp) || '🥈'}</div>
+                <div className="flex justify-center mb-2">
+                  <Flag team={finalists.runnerUp} className="w-16 h-10" />
+                </div>
                 <div className="text-textMuted text-sm mb-1">Subcampeón</div>
                 <div className="font-montserrat text-2xl font-bold text-accent">
                   {finalists.runnerUp}

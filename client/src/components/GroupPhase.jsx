@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { TEAMS, GROUP_MATCHES } from '../data/teams';
 import { calculateGroupStandings } from '../utils/groupLogic';
-import { getFlag } from '../utils/flags';
+import Flag from './Flag';
 
 const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
   const [activeGroup, setActiveGroup] = useState('A');
@@ -77,7 +77,7 @@ const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex-1 text-right flex items-center justify-end gap-2">
                       <span className="font-medium text-text">{match.home}</span>
-                      <span className="text-xl leading-none">{getFlag(match.home)}</span>
+                      <Flag team={match.home} />
                     </div>
                     <div className="flex items-center gap-2">
                       <input
@@ -99,7 +99,7 @@ const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
                       />
                     </div>
                     <div className="flex-1 text-left flex items-center gap-2">
-                      <span className="text-xl leading-none">{getFlag(match.away)}</span>
+                      <Flag team={match.away} />
                       <span className="font-medium text-text">{match.away}</span>
                     </div>
                   </div>
@@ -145,7 +145,7 @@ const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
                       </td>
                       <td className="py-3 px-2 font-medium text-text">
                         <span className="inline-flex items-center gap-2">
-                          <span className="text-lg leading-none">{getFlag(team.team)}</span>
+                          <Flag team={team.team} />
                           {team.team}
                         </span>
                       </td>

@@ -3,6 +3,7 @@ import { Trophy, CheckCircle, XCircle, Download } from 'lucide-react';
 import { api, storage } from '../utils/api';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import Flag from './Flag';
 
 const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
   const [loading, setLoading] = useState(false);
@@ -141,13 +142,22 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
             <div className="text-sm text-textMuted mb-2">Predicción Final</div>
             <div className="flex items-center justify-center gap-6">
               <div className="text-center">
-                <div className="text-3xl mb-2">🥇</div>
+                <div className="flex justify-center mb-2">
+                  <Flag team={bracket.final[0]?.winner} className="w-12 h-8" />
+                </div>
                 <div className="font-montserrat text-lg font-bold text-gold">
                   {bracket.final[0]?.winner || '---'}
                 </div>
               </div>
               <div className="text-center">
-                <div className="text-3xl mb-2">🥈</div>
+                <div className="flex justify-center mb-2">
+                  <Flag 
+                    team={bracket.final[0]?.homeTeam === bracket.final[0]?.winner 
+                      ? bracket.final[0]?.awayTeam 
+                      : bracket.final[0]?.homeTeam} 
+                    className="w-12 h-8" 
+                  />
+                </div>
                 <div className="font-montserrat text-lg font-bold text-accent">
                   {bracket.final[0]?.homeTeam === bracket.final[0]?.winner 
                     ? bracket.final[0]?.awayTeam 
