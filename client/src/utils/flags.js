@@ -5,19 +5,13 @@ const ISO_CODES = {
   'Senegal': 'sn',
   'Netherlands': 'nl',
   'England': 'gb-eng',
-  'Iran': 'ir',
+  'IR Iran': 'ir',
   'USA': 'us',
-  'Wales': 'gb-wls',
-  'Argentina': 'ar',
-  'Saudi Arabia': 'sa',
   'Mexico': 'mx',
-  'Poland': 'pl',
   'France': 'fr',
   'Australia': 'au',
-  'Denmark': 'dk',
   'Tunisia': 'tn',
   'Spain': 'es',
-  'Costa Rica': 'cr',
   'Germany': 'de',
   'Japan': 'jp',
   'Belgium': 'be',
@@ -25,34 +19,35 @@ const ISO_CODES = {
   'Morocco': 'ma',
   'Croatia': 'hr',
   'Brazil': 'br',
-  'Serbia': 'rs',
   'Switzerland': 'ch',
-  'Cameroon': 'cm',
   'Portugal': 'pt',
   'Ghana': 'gh',
   'Uruguay': 'uy',
-  'South Korea': 'kr',
-  'Italy': 'it',
+  'Korea Republic': 'kr',
   'New Zealand': 'nz',
   'Paraguay': 'py',
-  'Slovakia': 'sk',
   'Colombia': 'co',
-  'Greece': 'gr',
-  'Ivory Coast': 'ci',
+  'Côte d\'Ivoire': 'ci',
   'Sweden': 'se',
-  'Chile': 'cl',
-  'Nigeria': 'ng',
   'Algeria': 'dz',
-  'Russia': 'ru',
   'Egypt': 'eg',
   'Panama': 'pa',
-  'Peru': 'pe',
-  'Ukraine': 'ua',
   'Austria': 'at',
-  'Turkey': 'tr',
+  'Türkiye': 'tr',
   'Norway': 'no',
-  'Hungary': 'hu',
-  'Iraq': 'iq'
+  'Iraq': 'iq',
+  'South Africa': 'za',
+  'Czechia': 'cz',
+  'Bosnia and Herzegovina': 'ba',
+  'Haiti': 'ht',
+  'Scotland': 'gb-sct',
+  'Curaçao': 'cw',
+  'Cabo Verde': 'cv',
+  'Jordan': 'jo',
+  'Congo DR': 'cd',
+  'Uzbekistan': 'uz',
+  'Argentina': 'ar',
+  'Saudi Arabia': 'sa'
 };
 
 /**
@@ -65,13 +60,10 @@ export const getFlag = (teamName) => {
   const code = ISO_CODES[teamName];
   if (!code) return '🏳️';
 
-  // We return a small component or just the URL? 
-  // Let's return the URL and adjust the components to use <img>
   return `https://flagcdn.com/w40/${code.toLowerCase()}.png`;
 };
 
 // Keep emojis as fallback just in case
 export const FLAGS = {
   'Spain': '🇪🇸',
-  // ... rest of emojis if needed for text-only contexts
 };

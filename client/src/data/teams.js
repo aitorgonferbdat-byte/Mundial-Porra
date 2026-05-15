@@ -1,17 +1,17 @@
 // World Cup 2026 - 48 teams organized in 12 groups (A-L)
 export const TEAMS = {
-  A: ['Mexico', 'USA', 'Canada', 'Panama'],
-  B: ['Argentina', 'Peru', 'Chile', 'Paraguay'],
-  C: ['Brazil', 'Colombia', 'Uruguay', 'Ecuador'],
-  D: ['France', 'Austria', 'Poland', 'Ukraine'],
-  E: ['Spain', 'Italy', 'Sweden', 'Turkey'],
-  F: ['England', 'Denmark', 'Serbia', 'Norway'],
-  G: ['Belgium', 'Portugal', 'Switzerland', 'Hungary'],
-  H: ['Germany', 'Netherlands', 'Croatia', 'Slovakia'],
-  I: ['Morocco', 'Senegal', 'Nigeria', 'Egypt'],
-  J: ['Algeria', 'Ivory Coast', 'Cameroon', 'Ghana'],
-  K: ['Japan', 'South Korea', 'Iran', 'Saudi Arabia'],
-  L: ['Australia', 'Qatar', 'New Zealand', 'Iraq']
+  A: ['Mexico', 'South Africa', 'Korea Republic', 'Czechia'],
+  B: ['Canada', 'Bosnia and Herzegovina', 'Qatar', 'Switzerland'],
+  C: ['Brazil', 'Morocco', 'Haiti', 'Scotland'],
+  D: ['USA', 'Paraguay', 'Australia', 'Türkiye'],
+  E: ['Germany', 'Curaçao', 'Côte d\'Ivoire', 'Ecuador'],
+  F: ['Netherlands', 'Japan', 'Sweden', 'Tunisia'],
+  G: ['Belgium', 'Egypt', 'IR Iran', 'New Zealand'],
+  H: ['Spain', 'Cabo Verde', 'Saudi Arabia', 'Uruguay'],
+  I: ['France', 'Senegal', 'Iraq', 'Norway'],
+  J: ['Argentina', 'Algeria', 'Austria', 'Jordan'],
+  K: ['Portugal', 'Congo DR', 'Uzbekistan', 'Colombia'],
+  L: ['England', 'Croatia', 'Ghana', 'Panama']
 };
 
 // Group phase matches (6 matches per group, 72 total)
