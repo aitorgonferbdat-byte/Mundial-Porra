@@ -80,25 +80,25 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
           <div className="flex justify-center mb-6">
             <CheckCircle className="w-20 h-20 text-green-500" />
           </div>
-          <h2 className="font-montserrat text-2xl font-bold text-text mb-2">
-            ¡Porra Enviada!
+          <h2 className="font-outfit text-2xl font-bold text-navy mb-2 uppercase">
+            ¡Predicción Confirmada!
           </h2>
           <p className="text-textMuted mb-6">
             Tu predicción ha sido guardada correctamente. Buena suerte en el Mundial 2026.
           </p>
-          <div ref={summaryRef} className="bg-surfaceLight rounded-lg p-6 mb-6 border border-gold/20">
-            <h3 className="text-gold font-bold mb-4 font-montserrat">Resumen Mundial 2026</h3>
-            <div className="text-sm text-textMuted mb-2">Participante: <span className="text-text font-bold">{userData.name} (@{userData.nickname})</span></div>
+          <div ref={summaryRef} className="bg-slate-50 rounded-lg p-6 mb-6 border-2 border-emerald/20 shadow-inner">
+            <h3 className="text-navy font-black mb-4 font-outfit uppercase tracking-widest">Resumen Mundial 2026</h3>
+            <div className="text-sm text-slate-500 mb-2 font-medium">Participante: <span className="text-vibrant-red font-bold">{userData.name} (@{userData.nickname})</span></div>
             <div className="flex items-center justify-center gap-8 mt-4">
               <div className="text-center">
                 <div className="text-3xl mb-1">🥇</div>
-                <div className="text-xs text-textMuted uppercase tracking-wider mb-1">Campeón</div>
-                <div className="font-bold text-gold text-lg">{bracket.final[0]?.winner}</div>
+                <div className="text-[10px] text-slate-400 uppercase tracking-widest mb-1 font-bold">Campeón</div>
+                <div className="font-bold text-navy text-xl">{bracket.final[0]?.winner}</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl mb-1">🥈</div>
-                <div className="text-xs text-textMuted uppercase tracking-wider mb-1">Subcampeón</div>
-                <div className="font-bold text-accent text-lg">
+                <div className="text-[10px] text-slate-400 uppercase tracking-widest mb-1 font-bold">Subcampeón</div>
+                <div className="font-bold text-vibrant-red text-xl">
                   {bracket.final[0]?.homeTeam === bracket.final[0]?.winner 
                     ? bracket.final[0]?.awayTeam 
                     : bracket.final[0]?.homeTeam}
@@ -109,10 +109,10 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
           
           <button
             onClick={handleDownloadPDF}
-            className="w-full flex items-center justify-center gap-2 bg-accent hover:bg-accent/80 text-background font-bold py-3 px-6 rounded-lg transition-all mb-4"
+            className="w-full flex items-center justify-center gap-2 bg-navy hover:bg-navy/90 text-white font-bold py-3 px-6 rounded-lg transition-all mb-4 shadow-lg"
           >
             <Download className="w-5 h-5" />
-            Descargar Resumen PDF
+            Descargar Certificado Oficial
           </button>
         </div>
       </div>

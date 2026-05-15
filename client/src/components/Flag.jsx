@@ -11,7 +11,7 @@ const Flag = ({ team, className = "w-6 h-4" }) => {
       <img 
         src={flagSrc} 
         alt={team} 
-        className={`${className} inline-block object-cover rounded-sm shadow-sm border border-white/10`}
+        className={`${className} inline-block object-cover rounded-sm shadow-sm border border-slate-200`}
         loading="lazy"
       />
     );

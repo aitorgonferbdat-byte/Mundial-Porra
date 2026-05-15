@@ -48,8 +48,8 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
     const isComplete = match.played && (match.homeGoals !== match.awayGoals || match.penalties);
     
     return (
-      <div className="bg-surfaceLight rounded-lg p-4 border border-surfaceLight min-w-[200px]">
-        <div className="text-xs text-textMuted mb-2 font-medium">
+      <div className="bg-white rounded-lg p-4 border border-slate-200 min-w-[200px] shadow-sm">
+        <div className="text-[10px] text-navy/60 mb-2 font-bold uppercase tracking-wider">
           {round === 'roundOf32' ? 'Dieciseisavos' :
            round === 'roundOf16' ? 'Octavos' :
            round === 'quarterFinals' ? 'Cuartos' :
@@ -60,8 +60,8 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
           {/* Home Team */}
           <div className="flex items-center justify-between gap-2">
             <Flag team={match.homeTeam} />
-            <span className={`text-sm font-medium flex-1 ${
-              winner === match.homeTeam ? 'text-accent' : 'text-text'
+            <span className={`text-sm font-bold flex-1 ${
+              winner === match.homeTeam ? 'text-emerald' : 'text-navy'
             }`}>
               {match.homeTeam || '---'}
             </span>
@@ -79,8 +79,8 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
           {/* Away Team */}
           <div className="flex items-center justify-between gap-2">
             <Flag team={match.awayTeam} />
-            <span className={`text-sm font-medium flex-1 ${
-              winner === match.awayTeam ? 'text-accent' : 'text-text'
+            <span className={`text-sm font-bold flex-1 ${
+              winner === match.awayTeam ? 'text-emerald' : 'text-navy'
             }`}>
               {match.awayTeam || '---'}
             </span>
@@ -112,9 +112,9 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
           )}
           
           {winner && (
-            <div className="mt-2 pt-2 border-t border-accent/30">
-              <div className="text-xs text-accent font-bold">
-                ★ {winner}
+            <div className="mt-2 pt-2 border-t border-emerald/30">
+              <div className="text-[10px] text-emerald font-black uppercase tracking-tighter">
+                ★ GANADOR: {winner}
               </div>
             </div>
           )}
@@ -125,7 +125,7 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
 
   const BracketRound = ({ title, matches, round }) => (
     <div className="flex flex-col gap-4">
-      <h3 className="font-montserrat text-lg font-bold text-text text-center">{title}</h3>
+      <h3 className="font-outfit text-sm font-black text-navy text-center uppercase tracking-widest bg-slate-100 py-1 rounded">{title}</h3>
       <div className="flex flex-col gap-4">
         {matches.map(match => (
           <MatchCard key={match.id} match={match} round={round} />
@@ -141,10 +141,10 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="font-montserrat text-3xl font-bold text-gradient mb-2">
+          <h1 className="font-outfit text-3xl font-bold text-vibrant-red mb-2 uppercase">
             Fase de Eliminatorias
           </h1>
-          <p className="text-textMuted">
+          <p className="text-slate-500">
             Introduce los resultados. Los ganadores avanzarán automáticamente.
           </p>
         </div>
@@ -202,8 +202,8 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
             
             {/* Final */}
             <div className="flex flex-col gap-4">
-              <h3 className="font-montserrat text-lg font-bold text-gold text-center">Gran Final</h3>
-              <div className="bg-gold/10 rounded-lg p-4 border border-gold/30 min-w-[200px]">
+              <h3 className="font-outfit text-sm font-black text-vibrant-red text-center uppercase tracking-[0.2em] bg-vibrant-red/10 py-1 rounded">Gran Final</h3>
+              <div className="bg-vibrant-red/5 rounded-lg p-4 border-2 border-vibrant-red/20 min-w-[220px] shadow-lg">
                 {bracket.final.map(match => (
                   <MatchCard key={match.id} match={match} round="final" />
                 ))}

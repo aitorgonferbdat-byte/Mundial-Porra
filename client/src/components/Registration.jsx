@@ -38,17 +38,17 @@ const Registration = ({ onComplete }) => {
       <div className="card max-w-md w-full">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <Trophy className="w-16 h-16 text-gold" />
+            <Trophy className="w-16 h-16 text-emerald" />
           </div>
-          <h1 className="font-montserrat text-3xl font-bold text-gradient mb-2">
+          <h1 className="font-outfit text-3xl font-bold text-vibrant-red mb-2 uppercase">
             Mundial Porra 2026
           </h1>
-          <p className="text-textMuted">Regístrate para participar</p>
+          <p className="text-slate-500">Regístrate para comenzar tu predicción oficial</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="block text-sm font-medium text-text mb-2">
+            <label className="block text-sm font-bold text-navy mb-2 uppercase tracking-tight">
               Nombre Completo
             </label>
             <div className="relative">
@@ -65,7 +65,7 @@ const Registration = ({ onComplete }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text mb-2">
+            <label className="block text-sm font-bold text-navy mb-2 uppercase tracking-tight">
               Nickname
             </label>
             <div className="relative">
@@ -82,7 +82,7 @@ const Registration = ({ onComplete }) => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-text mb-2">
+            <label className="block text-sm font-bold text-navy mb-2 uppercase tracking-tight">
               Email
             </label>
             <div className="relative">

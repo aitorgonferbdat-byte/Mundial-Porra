@@ -36,10 +36,10 @@ const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="font-montserrat text-3xl font-bold text-gradient mb-2">
+          <h1 className="font-outfit text-3xl font-bold text-vibrant-red mb-2 uppercase">
             Fase de Grupos
           </h1>
-          <p className="text-textMuted">
+          <p className="text-slate-500">
             Introduce los resultados de los partidos. Las tablas se actualizarán automáticamente.
           </p>
         </div>
@@ -50,10 +50,10 @@ const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
             <button
               key={group}
               onClick={() => setActiveGroup(group)}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              className={`px-4 py-2 rounded-lg font-bold uppercase text-xs tracking-widest transition-all ${
                 activeGroup === group
-                  ? 'bg-accent text-background'
-                  : 'bg-surfaceLight text-text hover:bg-surface'
+                  ? 'bg-navy text-white'
+                  : 'bg-white text-navy border border-slate-200 hover:border-navy'
               }`}
             >
               Grupo {group}
@@ -64,11 +64,13 @@ const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
         {/* Group Content */}
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Matches */}
-          <div className="card">
-            <h2 className="font-montserrat text-xl font-bold text-text mb-4">
-              Partidos - Grupo {activeGroup}
-            </h2>
-            <div className="space-y-4">
+          <div className="card !p-0 overflow-hidden">
+            <div className="bg-navy px-6 py-3">
+              <h2 className="font-outfit text-lg font-bold text-white uppercase tracking-wider">
+                Partidos - Grupo {activeGroup}
+              </h2>
+            </div>
+            <div className="p-6 space-y-4">
               {groupMatches[activeGroup].map(match => (
                 <div
                   key={match.id}
@@ -109,11 +111,13 @@ const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
           </div>
 
           {/* Standings */}
-          <div className="card">
-            <h2 className="font-montserrat text-xl font-bold text-text mb-4">
-              Clasificación - Grupo {activeGroup}
-            </h2>
-            <div className="overflow-x-auto">
+          <div className="card !p-0 overflow-hidden">
+            <div className="bg-navy px-6 py-3">
+              <h2 className="font-outfit text-lg font-bold text-white uppercase tracking-wider">
+                Clasificación - Grupo {activeGroup}
+              </h2>
+            </div>
+            <div className="p-6">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-surfaceLight">
@@ -149,9 +153,9 @@ const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
                           {team.team}
                         </span>
                       </td>
-                      <td className="py-3 px-2 text-center text-text">{team.played}</td>
-                      <td className="py-3 px-2 text-center font-bold text-accent">{team.points}</td>
-                      <td className="py-3 px-2 text-center text-text">
+                      <td className="py-3 px-2 text-center text-navy">{team.played}</td>
+                      <td className="py-3 px-2 text-center font-bold text-emerald">{team.points}</td>
+                      <td className="py-3 px-2 text-center text-navy">
                         {team.goalDifference > 0 ? '+' : ''}{team.goalDifference}
                       </td>
                     </tr>
@@ -170,14 +174,14 @@ const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
         {/* Progress Indicator */}
         <div className="mt-8 card">
           <div className="flex items-center justify-between mb-4">
-            <span className="text-textMuted">Progreso de Fase de Grupos</span>
-            <span className="font-bold text-accent">
+            <span className="text-slate-500 font-medium">Progreso de Fase de Grupos</span>
+            <span className="font-bold text-navy">
               {groups.filter(g => isGroupComplete(g)).length} / {groups.length} grupos completados
             </span>
           </div>
-          <div className="w-full bg-surfaceLight rounded-full h-2">
+          <div className="w-full bg-slate-100 rounded-full h-3 border border-slate-200">
             <div
-              className="bg-accent h-2 rounded-full transition-all duration-300"
+              className="bg-emerald h-full rounded-full transition-all duration-300 shadow-sm"
               style={{
                 width: `${(groups.filter(g => isGroupComplete(g)).length / groups.length) * 100}%`
               }}

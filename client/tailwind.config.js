@@ -7,21 +7,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#05070A',
-        surface: '#0D121F',
-        surfaceLight: '#1A2333',
-        accent: '#00F5FF', // Electric Cyan (Official 2026 feel)
-        secondary: '#FF0080', // Vibrant Pink
-        gold: '#FFD700',
-        text: '#FFFFFF',
-        textMuted: '#94A3B8'
+        background: '#FFFFFF',
+        navy: '#0A2551',
+        'vibrant-red': '#E12C2C',
+        emerald: '#00703B',
+        surface: '#FFFFFF',
+        surfaceLight: '#F8FAFC',
+        text: '#0A2551',
+        textMuted: '#64748B'
       },
       fontFamily: {
+        outfit: ['Outfit', 'sans-serif'],
         montserrat: ['Montserrat', 'sans-serif'],
-        poppins: ['Poppins', 'sans-serif']
       },
       backgroundImage: {
-        'gradient-2026': 'linear-gradient(135deg, #00F5FF 0%, #FF0080 100%)',
+        'gradient-2026': 'linear-gradient(135deg, #0A2551 0%, #E12C2C 100%)',
+        'pattern-2026': "url('https://www.fifa.com/static-assets/fifacom/images/identity/fwc2026/background-pattern.png')", // Placeholder if needed
       }
     },
   },
