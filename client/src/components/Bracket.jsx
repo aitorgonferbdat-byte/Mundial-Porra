@@ -43,33 +43,61 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
     setBracket(advancedBracket);
   };
 
+  const formatTeamName = (name) => {
+    if (!name) return '---';
+    // If it's a resolved country name, just return it
+    if (!name.match(/^\d[A-L]$/) && !name.startsWith('3') && !name.includes('-winner')) {
+      return name;
+    }
+    // Format placeholders
+    if (name.startsWith('3')) {
+      const groups = name.includes('_') ? name.split('_')[1] : name.substring(1);
+      return `3º ${groups}`;
+    }
+    if (name.match(/^\d[A-L]$/)) {
+      const pos = name[0] === '1' ? '1º' : '2º';
+      return `${pos} Grupo ${name[1]}`;
+    }
+    if (name.includes('-winner')) {
+      return `Ganador ${name.replace('-winner', '').replace('R32-', 'M').replace('R16-', 'O').replace('QF-', 'C').replace('SF-', 'S')}`;
+    }
+    return name;
+  };
+
   const MatchCard = ({ match, round }) => {
     const winner = determineWinner(match);
-    const isComplete = match.played && (match.homeGoals !== match.awayGoals || match.penalties);
     
     return (
-      <div className="bg-white rounded-lg p-4 border border-slate-200 min-w-[200px] shadow-sm">
-        <div className="text-[10px] text-navy/60 mb-2 font-bold uppercase tracking-wider">
-          {round === 'roundOf32' ? 'Dieciseisavos' :
-           round === 'roundOf16' ? 'Octavos' :
-           round === 'quarterFinals' ? 'Cuartos' :
-           round === 'semiFinals' ? 'Semifinales' : 'Final'}
+      <div className={`bg-white rounded-xl p-3 border-2 transition-all duration-200 shadow-sm w-full ${
+        winner ? 'border-emerald/30 shadow-md' : 'border-slate-100 hover:border-slate-300'
+      }`}>
+        <div className="flex justify-between items-center mb-2 px-1">
+          <span className="text-[9px] text-navy/40 font-black uppercase tracking-widest">
+            {round === 'roundOf32' ? 'R32' :
+             round === 'roundOf16' ? 'R16' :
+             round === 'quarterFinals' ? 'Cuartos' :
+             round === 'semiFinals' ? 'Semis' : 'Final'}
+          </span>
+          {winner && (
+            <span className="text-[9px] text-emerald font-black uppercase">✓ OK</span>
+          )}
         </div>
         
         <div className="space-y-2">
           {/* Home Team */}
-          <div className="flex items-center justify-between gap-2">
-            <Flag team={match.homeTeam} />
-            <span className={`text-sm font-bold flex-1 ${
+          <div className="flex items-center gap-3">
+            <div className="w-8 flex justify-center">
+              <Flag team={match.homeTeam} className="w-6 h-4 shadow-sm rounded-sm" />
+            </div>
+            <span className={`text-xs font-bold flex-1 truncate ${
               winner === match.homeTeam ? 'text-emerald' : 'text-navy'
             }`}>
-              {match.homeTeam || '---'}
+              {formatTeamName(match.homeTeam || match.home)}
             </span>
             <input
               type="number"
               min="0"
-              max="99"
-              className="w-10 h-8 bg-background border border-surfaceLight rounded text-center text-text font-bold text-sm"
+              className="w-10 h-8 bg-slate-50 border border-slate-200 rounded-lg text-center text-navy font-bold text-xs focus:border-navy focus:ring-0 transition-colors"
               value={match.homeGoals ?? ''}
               onChange={(e) => updateMatch(round, match.id, 'homeGoals', e.target.value)}
               disabled={!match.homeTeam}
@@ -77,18 +105,19 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
           </div>
           
           {/* Away Team */}
-          <div className="flex items-center justify-between gap-2">
-            <Flag team={match.awayTeam} />
-            <span className={`text-sm font-bold flex-1 ${
+          <div className="flex items-center gap-3">
+            <div className="w-8 flex justify-center">
+              <Flag team={match.awayTeam} className="w-6 h-4 shadow-sm rounded-sm" />
+            </div>
+            <span className={`text-xs font-bold flex-1 truncate ${
               winner === match.awayTeam ? 'text-emerald' : 'text-navy'
             }`}>
-              {match.awayTeam || '---'}
+              {formatTeamName(match.awayTeam || match.away)}
             </span>
             <input
               type="number"
               min="0"
-              max="99"
-              className="w-10 h-8 bg-background border border-surfaceLight rounded text-center text-text font-bold text-sm"
+              className="w-10 h-8 bg-slate-50 border border-slate-200 rounded-lg text-center text-navy font-bold text-xs focus:border-navy focus:ring-0 transition-colors"
               value={match.awayGoals ?? ''}
               onChange={(e) => updateMatch(round, match.id, 'awayGoals', e.target.value)}
               disabled={!match.awayTeam}
@@ -97,25 +126,16 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
           
           {/* Penalties for draws */}
           {match.played && match.homeGoals === match.awayGoals && (
-            <div className="mt-2 pt-2 border-t border-surface">
-              <label className="text-xs text-textMuted block mb-1">Ganador por penaltis:</label>
+            <div className="mt-2 pt-2 border-t border-slate-100">
               <select
-                className="w-full bg-background border border-surfaceLight rounded px-2 py-1 text-text text-sm"
+                className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1 text-navy text-[10px] font-bold focus:border-navy"
                 value={match.penalties || ''}
                 onChange={(e) => updateMatch(round, match.id, 'penalties', e.target.value)}
               >
-                <option value="">Seleccionar...</option>
+                <option value="">Ganador penaltis...</option>
                 <option value={match.homeTeam}>{match.homeTeam}</option>
                 <option value={match.awayTeam}>{match.awayTeam}</option>
               </select>
-            </div>
-          )}
-          
-          {winner && (
-            <div className="mt-2 pt-2 border-t border-emerald/30">
-              <div className="text-[10px] text-emerald font-black uppercase tracking-tighter">
-                ★ GANADOR: {winner}
-              </div>
             </div>
           )}
         </div>
@@ -123,12 +143,18 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
     );
   };
 
-  const BracketRound = ({ title, matches, round }) => (
-    <div className="flex flex-col gap-4">
-      <h3 className="font-outfit text-sm font-black text-navy text-center uppercase tracking-widest bg-slate-100 py-1 rounded">{title}</h3>
-      <div className="flex flex-col gap-4">
-        {matches.map(match => (
-          <MatchCard key={match.id} match={match} round={round} />
+  const BracketRound = ({ title, matches, round, isFinal = false }) => (
+    <div className="flex flex-col gap-6 min-w-[240px] flex-1">
+      <h3 className={`font-outfit text-xs font-black text-center uppercase tracking-[0.2em] py-2 rounded-lg shrink-0 shadow-sm ${
+        isFinal ? 'text-white bg-vibrant-red' : 'text-navy bg-white border border-slate-200'
+      }`}>
+        {title}
+      </h3>
+      <div className="flex flex-col flex-grow justify-around gap-4 relative">
+        {matches.map((match, index) => (
+          <div key={match.id} className="flex flex-col justify-center py-2">
+            <MatchCard match={match} round={round} />
+          </div>
         ))}
       </div>
     </div>
@@ -139,76 +165,49 @@ const Bracket = ({ groupMatches, bracket, setBracket, onSubmit }) => {
 
   return (
     <div className="min-h-screen p-4 md:p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="font-outfit text-3xl font-bold text-vibrant-red mb-2 uppercase">
-            Fase de Eliminatorias
+      <div className="max-w-[1600px] mx-auto">
+        <div className="mb-8 text-center md:text-left">
+          <h1 className="font-outfit text-4xl font-black text-navy mb-2 uppercase tracking-tight">
+            Fase de <span className="text-vibrant-red">Eliminatorias</span>
           </h1>
-          <p className="text-slate-500">
-            Introduce los resultados. Los ganadores avanzarán automáticamente.
+          <p className="text-slate-500 font-medium">
+            Completa los resultados para avanzar en el torneo.
           </p>
         </div>
 
         {/* Bracket Visualization */}
-        <div className="card overflow-x-auto">
-          <div className="flex gap-8 min-w-max p-6">
-            {/* Round of 32 */}
+        <div className="bg-slate-100/50 rounded-3xl p-4 md:p-8 overflow-x-auto border border-slate-200 shadow-inner">
+          <div className="flex gap-6 md:gap-12 min-w-max items-stretch">
             <BracketRound
               title="Dieciseisavos"
               matches={bracket.roundOf32}
               round="roundOf32"
             />
             
-            {/* Connector Line */}
-            <div className="hidden lg:flex items-center">
-              <div className="w-8 h-0.5 bg-surfaceLight" />
-            </div>
-
-            {/* Round of 16 */}
             <BracketRound
-              title="Octavos de Final"
+              title="Octavos"
               matches={bracket.roundOf16}
               round="roundOf16"
             />
             
-            {/* Connector Line */}
-            <div className="hidden lg:flex items-center">
-              <div className="w-8 h-0.5 bg-surfaceLight" />
-            </div>
-            
-            {/* Quarter Finals */}
             <BracketRound
-              title="Cuartos de Final"
+              title="Cuartos"
               matches={bracket.quarterFinals}
               round="quarterFinals"
             />
             
-            {/* Connector Line */}
-            <div className="hidden lg:flex items-center">
-              <div className="w-8 h-0.5 bg-surfaceLight" />
-            </div>
-            
-            {/* Semi Finals */}
             <BracketRound
               title="Semifinales"
               matches={bracket.semiFinals}
               round="semiFinals"
             />
             
-            {/* Connector Line */}
-            <div className="hidden lg:flex items-center">
-              <div className="w-8 h-0.5 bg-gold" />
-            </div>
-            
-            {/* Final */}
-            <div className="flex flex-col gap-4">
-              <h3 className="font-outfit text-sm font-black text-vibrant-red text-center uppercase tracking-[0.2em] bg-vibrant-red/10 py-1 rounded">Gran Final</h3>
-              <div className="bg-vibrant-red/5 rounded-lg p-4 border-2 border-vibrant-red/20 min-w-[220px] shadow-lg">
-                {bracket.final.map(match => (
-                  <MatchCard key={match.id} match={match} round="final" />
-                ))}
-              </div>
-            </div>
+            <BracketRound
+              title="Final"
+              matches={bracket.final}
+              round="final"
+              isFinal={true}
+            />
           </div>
         </div>
 

@@ -1,21 +1,20 @@
-// Resolve team placeholders (e.g., "1A") to actual team names
+// Resolve team placeholders (e.g., "1A", "3B/C/D", "R32-1-winner") to actual team names
 export const resolveTeam = (teamPlaceholder, qualifiedTeams) => {
   if (!teamPlaceholder || !qualifiedTeams) return null;
   
-  // If it's already a team name (not a placeholder), return it
-  if (!teamPlaceholder.match(/^\d[A-L]$/) && !teamPlaceholder.startsWith('3_') && !teamPlaceholder.includes('-winner')) {
-    return teamPlaceholder;
-  }
-  
-  // Resolve group position (e.g., "1A" or "3_ABCDF")
-  if (teamPlaceholder.match(/^\d[A-L]$/) || teamPlaceholder.startsWith('3_')) {
+  // Check if it's a team placeholder (1A, 2B, etc.)
+  const isGroupPos = teamPlaceholder.match(/^\d[A-L]$/);
+  // Check if it's a 3rd place placeholder (3B/C/D, 3_ABCDF, etc.)
+  const isThirdPlace = teamPlaceholder.startsWith('3');
+  // Check if it's a winner placeholder (R32-1-winner)
+  const isWinnerPlaceholder = teamPlaceholder.includes('-winner');
+
+  if (isGroupPos || isThirdPlace) {
     return qualifiedTeams[teamPlaceholder] || teamPlaceholder;
   }
   
-  // Resolve previous round winner (e.g., "R16-1-winner")
-  if (teamPlaceholder.includes('-winner')) {
-    const matchId = teamPlaceholder.replace('-winner', '');
-    return teamPlaceholder; // Will be resolved by the match winner
+  if (isWinnerPlaceholder) {
+    return teamPlaceholder; // Will be resolved later by match winner
   }
   
   return teamPlaceholder;

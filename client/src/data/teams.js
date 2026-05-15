@@ -42,22 +42,22 @@ Object.keys(TEAMS).forEach(group => {
 // Knockout phase bracket structure (Round of 32 for 2026 format)
 export const KNOCKOUT_BRACKET = {
   roundOf32: [
-    { id: 'R32-1', home: '1A', away: '3B/C/D', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-2', home: '2A', away: '2B', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-3', home: '1B', away: '3A/C/D', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-4', home: '1C', away: '3A/B/D', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-5', home: '1D', away: '3A/B/C', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-1', home: '1A', away: '3_CEFHI', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-2', home: '2A', away: '1C', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-3', home: '1B', away: '3_EFGIJ', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-4', home: '2B', away: '1F', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-5', home: '1D', away: '3_BEFIJ', homeGoals: null, awayGoals: null, winner: null, penalties: null },
     { id: 'R32-6', home: '2C', away: '2D', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-7', home: '1E', away: '3F/G/H', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-8', home: '2E', away: '2F', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-9', home: '1F', away: '3E/G/H', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-10', home: '1G', away: '3E/F/H', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-11', home: '1H', away: '3E/F/G', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-12', home: '2G', away: '2H', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-13', home: '1I', away: '3J/K/L', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-7', home: '1E', away: '3_ABCDF', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-8', home: '2E', away: '1H', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-9', home: '1G', away: '3_AEHIJ', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-10', home: '2F', away: '2H', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-11', home: '1I', away: '3_CDFGH', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-12', home: '2G', away: '1J', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-13', home: '1K', away: '3_DEIJL', homeGoals: null, awayGoals: null, winner: null, penalties: null },
     { id: 'R32-14', home: '2I', away: '2J', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-15', home: '1J', away: '3I/K/L', homeGoals: null, awayGoals: null, winner: null, penalties: null },
-    { id: 'R32-16', home: '1K', away: '2L', homeGoals: null, awayGoals: null, winner: null, penalties: null }
+    { id: 'R32-15', home: '1L', away: '3_EHIJK', homeGoals: null, awayGoals: null, winner: null, penalties: null },
+    { id: 'R32-16', home: '2K', away: '2L', homeGoals: null, awayGoals: null, winner: null, penalties: null }
   ],
   roundOf16: [
     { id: 'R16-1', home: 'R32-1-winner', away: 'R32-2-winner', homeGoals: null, awayGoals: null, winner: null, penalties: null },
