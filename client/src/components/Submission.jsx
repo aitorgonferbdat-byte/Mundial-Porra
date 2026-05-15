@@ -1,9 +1,4 @@
-import { useState, useRef } from 'react';
-import { Trophy, CheckCircle, XCircle, Download } from 'lucide-react';
-import { api, storage } from '../utils/api';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import Flag from './Flag';
+import { db, doc, setDoc } from '../lib/firebase';
 
 const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
   const [loading, setLoading] = useState(false);
@@ -27,6 +22,11 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
   };
 
   const handleSubmit = async () => {
+    if (!userData?.name) {
+      setError('Error: No se encontró el nombre del usuario.');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -43,31 +43,22 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
         ? bracket.final[0]?.awayTeam 
         : bracket.final[0]?.homeTeam;
 
-      // Save prediction to localStorage
-      storage.savePrediction({ matchResults, champion, runnerUp, user: userData });
-
-      // Send email via serverless function
-      const response = await api.sendPrediction({
+      // Save to Firebase Firestore
+      // Colección 'usuarios', documento con ID = nombre del amigo
+      await setDoc(doc(db, "usuarios", userData.name), {
         user: userData,
-        matchResults,
+        predictions: matchResults,
         champion,
-        runnerUp
+        runnerUp,
+        timestamp: new Date().toISOString()
       });
 
-      if (response.success) {
-        setSuccess(true);
-        setTimeout(() => onComplete(), 5000);
-      } else {
-        // Even if email fails, prediction is saved locally
-        console.warn('Email sending failed:', response.error);
-        setSuccess(true);
-        setTimeout(() => onComplete(), 5000);
-      }
-    } catch (err) {
-      // Even on network error, prediction is saved in localStorage
-      console.warn('Network error, but prediction saved locally:', err);
       setSuccess(true);
-      setTimeout(() => onComplete(), 5000);
+      // Wait a bit longer to allow user to see success and download PDF
+      setTimeout(() => onComplete(), 10000);
+    } catch (err) {
+      console.error('Error saving to Firebase:', err);
+      setError('Error al conectar con la base de datos. Verifica tu conexión e inténtalo de nuevo.');
     } finally {
       setLoading(false);
     }
