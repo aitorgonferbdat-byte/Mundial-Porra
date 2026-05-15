@@ -40,8 +40,8 @@ function App() {
       <header className="bg-navy py-4 px-6 shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-white p-1 rounded cursor-pointer" onClick={() => setStep('registration')}>
-              <img src="https://www.fifa.com/static-assets/fifacom/images/identity/fwc2026/logo.png" alt="FIFA 2026" className="h-10" />
+            <div className="bg-white p-1 rounded cursor-pointer shadow-sm hover:shadow-md transition-shadow" onClick={() => setStep('registration')}>
+              <img src="/logo.png" alt="Mundial 2026" className="h-10" />
             </div>
             <h1 className="text-white font-outfit text-xl font-bold uppercase tracking-wider cursor-pointer" onClick={() => setStep('registration')}>
               Mundial <span className="text-vibrant-red">Porra</span> 2026
