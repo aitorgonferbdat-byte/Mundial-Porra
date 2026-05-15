@@ -5,23 +5,30 @@
 @layer base {
   body {
     @apply bg-background text-text font-poppins;
+    background-image: 
+      radial-gradient(at 0% 0%, rgba(0, 245, 255, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, rgba(255, 0, 128, 0.05) 0px, transparent 50%);
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-accent hover:bg-accent/90 text-background font-semibold px-6 py-3 rounded-lg transition-all duration-200;
+    @apply bg-accent hover:bg-accent/90 text-background font-bold px-6 py-3 rounded-lg transition-all duration-200 shadow-[0_0_15px_rgba(0,245,255,0.3)];
   }
   
   .btn-gold {
-    @apply bg-gold hover:bg-gold/90 text-background font-semibold px-6 py-3 rounded-lg transition-all duration-200;
+    @apply bg-gradient-2026 hover:opacity-90 text-white font-bold px-6 py-3 rounded-lg transition-all duration-200 shadow-[0_0_20px_rgba(255,0,128,0.2)];
   }
   
   .card {
-    @apply bg-surface rounded-xl p-6 border border-surfaceLight;
+    @apply bg-surface/80 backdrop-blur-md rounded-2xl p-6 border border-white/5 shadow-xl;
   }
   
   .input-field {
-    @apply bg-surfaceLight border border-surfaceLight rounded-lg px-4 py-3 text-text placeholder-textMuted focus:outline-none focus:border-accent transition-all;
+    @apply bg-surfaceLight/50 border border-white/10 rounded-xl px-4 py-3 text-text placeholder-textMuted focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-2026 bg-clip-text text-transparent;
   }
 }

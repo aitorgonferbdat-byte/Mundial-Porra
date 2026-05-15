@@ -40,7 +40,7 @@ const Registration = ({ onComplete }) => {
           <div className="flex justify-center mb-4">
             <Trophy className="w-16 h-16 text-gold" />
           </div>
-          <h1 className="font-montserrat text-3xl font-bold text-text mb-2">
+          <h1 className="font-montserrat text-3xl font-bold text-gradient mb-2">
             Mundial Porra 2026
           </h1>
           <p className="text-textMuted">Regístrate para participar</p>

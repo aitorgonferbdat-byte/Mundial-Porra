@@ -36,7 +36,7 @@ const GroupPhase = ({ groupMatches, setGroupMatches, onNext }) => {
     <div className="min-h-screen p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="font-montserrat text-3xl font-bold text-text mb-2">
+          <h1 className="font-montserrat text-3xl font-bold text-gradient mb-2">
             Fase de Grupos
           </h1>
           <p className="text-textMuted">
