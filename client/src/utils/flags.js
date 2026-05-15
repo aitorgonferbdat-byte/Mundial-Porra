@@ -44,7 +44,15 @@ const ISO_CODES = {
   'Nigeria': 'ng',
   'Algeria': 'dz',
   'Russia': 'ru',
-  'Egypt': 'eg'
+  'Egypt': 'eg',
+  'Panama': 'pa',
+  'Peru': 'pe',
+  'Ukraine': 'ua',
+  'Austria': 'at',
+  'Turkey': 'tr',
+  'Norway': 'no',
+  'Hungary': 'hu',
+  'Iraq': 'iq'
 };
 
 /**

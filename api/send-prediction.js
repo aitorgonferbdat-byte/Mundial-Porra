@@ -11,7 +11,9 @@ const ISO_CODES = {
   'Portugal': 'pt', 'Ghana': 'gh', 'Uruguay': 'uy', 'South Korea': 'kr',
   'Italy': 'it', 'New Zealand': 'nz', 'Paraguay': 'py', 'Slovakia': 'sk',
   'Colombia': 'co', 'Greece': 'gr', 'Ivory Coast': 'ci', 'Sweden': 'se',
-  'Chile': 'cl', 'Nigeria': 'ng', 'Algeria': 'dz', 'Russia': 'ru', 'Egypt': 'eg'
+  'Chile': 'cl', 'Nigeria': 'ng', 'Algeria': 'dz', 'Russia': 'ru', 'Egypt': 'eg',
+  'Panama': 'pa', 'Peru': 'pe', 'Ukraine': 'ua', 'Austria': 'at', 'Turkey': 'tr', 'Norway': 'no',
+  'Hungary': 'hu', 'Iraq': 'iq'
 };
 
 const getFlagUrl = (team) => {
