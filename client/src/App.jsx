@@ -22,6 +22,13 @@ function App() {
   // Escuchador de Persistencia de Sesión y Redirección
   useEffect(() => {
     const initAuth = async () => {
+      // Recuperar el paso guardado antes del redirect (si existe)
+      const savedStep = sessionStorage.getItem('auth_redirect_step');
+      if (savedStep) {
+        setStep(savedStep);
+        sessionStorage.removeItem('auth_redirect_step');
+      }
+
       // 1. Verificar si venimos de un redireccionamiento de Google
       try {
         const result = await getRedirectResult(auth);

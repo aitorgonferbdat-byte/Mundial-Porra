@@ -22,9 +22,10 @@ const Login = ({ onLogin, onBack }) => {
     } catch (err) {
       console.error("Google Popup Error:", err);
       
-      if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request') {
-        // Si el popup está bloqueado, probamos con Redireccionamiento
+      if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request' || err.code === 'auth/popup-closed-by-user') {
+        // Si el popup está bloqueado o da problemas, probamos con Redireccionamiento
         try {
+          sessionStorage.setItem('auth_redirect_step', 'login');
           await signInWithRedirect(auth, googleProvider);
         } catch (redirErr) {
           setError('Error al intentar redireccionar a Google.');
