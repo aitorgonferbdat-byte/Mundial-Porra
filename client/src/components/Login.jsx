@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { auth, googleProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../lib/firebase';
+import { auth, googleProvider, signInWithPopup, signInWithRedirect, createUserWithEmailAndPassword, signInWithEmailAndPassword } from '../lib/firebase';
 
 const Login = ({ onLogin, onBack }) => {
   const [isRegistering, setIsRegistering] = useState(false);
@@ -14,14 +14,23 @@ const Login = ({ onLogin, onBack }) => {
     setError('');
     setLoading(true);
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      onLogin(result.user);
+      // Intentamos con Popup primero
+      await signInWithPopup(auth, googleProvider);
+      // El resultado lo maneja onAuthStateChanged en App.jsx
     } catch (err) {
-      console.error("Google Login Error:", err);
-      if (err.code === 'auth/popup-closed-by-user') {
-        setError('El popup se cerró antes de completar el inicio de sesión.');
+      console.error("Google Popup Error:", err);
+      
+      if (err.code === 'auth/popup-blocked' || err.code === 'auth/cancelled-popup-request') {
+        // Si el popup está bloqueado, probamos con Redireccionamiento
+        try {
+          await signInWithRedirect(auth, googleProvider);
+        } catch (redirErr) {
+          setError('Error al intentar redireccionar a Google.');
+        }
+      } else if (err.code === 'auth/unauthorized-domain') {
+        setError('Error: Dominio no autorizado en Firebase. Añade este dominio en la consola.');
       } else {
-        setError('Error al conectar con Google. Revisa tu conexión.');
+        setError('Error con Google. Prueba de nuevo o usa Correo.');
       }
     } finally {
       setLoading(false);

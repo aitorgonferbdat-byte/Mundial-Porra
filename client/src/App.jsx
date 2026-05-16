@@ -9,7 +9,7 @@ import Leaderboard from './components/Leaderboard';
 import AdminPanel from './components/AdminPanel';
 import Rules from './components/Rules';
 import { GROUP_MATCHES, KNOCKOUT_BRACKET } from './data/teams';
-import { auth, onAuthStateChanged, signOut, db, doc, getDoc } from './lib/firebase';
+import { auth, onAuthStateChanged, signOut, db, doc, getDoc, getRedirectResult } from './lib/firebase';
 
 function App() {
   const [step, setStep] = useState('home'); // home, login, registration, groups, bracket, submission, leaderboard, admin, rules
@@ -21,6 +21,19 @@ function App() {
 
   // Escuchador de Persistencia de Sesión
   useEffect(() => {
+    // Verificar si venimos de un redireccionamiento de Google
+    const checkRedirect = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          handleLoginSuccess(result.user);
+        }
+      } catch (err) {
+        console.error("Error en redireccionamiento:", err);
+      }
+    };
+    checkRedirect();
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);

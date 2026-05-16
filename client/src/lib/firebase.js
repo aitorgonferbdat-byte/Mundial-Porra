@@ -3,6 +3,8 @@ import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, query, order
 import { 
   getAuth, 
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider, 
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
@@ -38,6 +40,8 @@ export {
   db, 
   googleProvider,
   signInWithPopup, 
+  signInWithRedirect,
+  getRedirectResult,
   createUserWithEmailAndPassword, 
   signInWithEmailAndPassword, 
   signOut, 
