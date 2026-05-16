@@ -147,9 +147,7 @@ function App() {
           {/* Logo & Social */}
           <div className="flex-1 flex items-center gap-8">
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setStep('home')}>
-              <img src="/logo.png" alt="Logo" className="h-10 group-hover:scale-110 transition-transform" 
-                onError={(e) => e.target.src = "https://cdn-icons-png.flaticon.com/512/5329/5329948.png"} 
-              />
+              <img src="/logo.png" alt="Logo" className="h-10 group-hover:scale-110 transition-transform" />
               <span className="font-black text-xl tracking-tighter uppercase">LaPorrita</span>
             </div>
             

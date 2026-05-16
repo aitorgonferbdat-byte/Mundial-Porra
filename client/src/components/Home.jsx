@@ -138,12 +138,9 @@ const Home = ({ onStart, onRules, onLeaderboard }) => {
               <div className="absolute inset-0 bg-brand-green/20 blur-[100px] rounded-full group-hover:bg-brand-green/30 transition-all duration-700"></div>
               <div className="absolute inset-0 border-2 border-dashed border-white/5 rounded-full animate-[spin_20s_linear_infinite]"></div>
               <img 
-                src="/logo-placeholder.png" 
+                src="/logo.png" 
                 alt="La Porrita" 
-                className="relative w-[85%] h-[85%] object-contain drop-shadow-[0_0_60px_rgba(34,197,94,0.5)] transform group-hover:scale-105 transition-transform duration-700"
-                onError={(e) => {
-                  e.target.src = "https://cdn-icons-png.flaticon.com/512/5329/5329948.png";
-                }}
+                className="relative w-[90%] h-[90%] object-contain drop-shadow-[0_0_80px_rgba(34,197,94,0.6)] transform group-hover:scale-110 transition-transform duration-700"
               />
             </div>
 

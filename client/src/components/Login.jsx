@@ -86,10 +86,7 @@ const Login = ({ onLogin, onBack }) => {
           <img 
             src="/logo.png" 
             alt="La Porrita" 
-            className="w-48 h-48 object-contain drop-shadow-2xl"
-            onError={(e) => {
-              e.target.src = "https://cdn-icons-png.flaticon.com/512/5329/5329948.png";
-            }}
+            className="w-56 h-56 object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.2)]"
           />
           <span className="text-white/40 text-xs font-black mt-8 tracking-widest uppercase">v0.5.02</span>
         </div>
