@@ -200,11 +200,6 @@ const Home = ({ onStart, onRules, onLeaderboard }) => {
         </div>
       </section>
       
-      {/* Scroll Indicator */}
-      <div className="absolute top-[85%] left-1/2 -translate-x-1/2 hidden lg:flex flex-col items-center gap-3 animate-bounce opacity-20">
-        <span className="text-[9px] font-black text-white uppercase tracking-[0.5em]">Scroll</span>
-        <div className="w-[1px] h-10 bg-gradient-to-b from-white to-transparent"></div>
-      </div>
     </div>
   );
 };
