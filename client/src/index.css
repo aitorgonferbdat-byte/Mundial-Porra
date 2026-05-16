@@ -4,45 +4,63 @@
 
 @layer base {
   body {
-    @apply bg-background text-text font-outfit;
-    background-image: url('https://www.fifa.com/static-assets/fifacom/images/identity/fwc2026/background-pattern.png');
-    background-repeat: repeat;
-    background-size: 600px;
+    @apply bg-background text-text font-outfit overflow-x-hidden;
+    background-image: 
+      radial-gradient(circle at center, rgba(34, 197, 94, 0.1) 0%, transparent 70%),
+      linear-gradient(rgba(4, 28, 20, 0.95), rgba(4, 28, 20, 0.95)),
+      url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
     background-attachment: fixed;
-    position: relative;
   }
 
+  /* Soccer pitch lines effect */
   body::before {
     content: '';
     position: fixed;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: white;
-    opacity: 0.96;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    z-index: -1;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 300px;
+    border: 2px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
     z-index: -1;
   }
 }
 
 @layer components {
+  .glass {
+    @apply bg-white/5 backdrop-blur-md border border-white/10;
+  }
+  
   .btn-primary {
-    @apply bg-emerald hover:bg-emerald/90 text-white font-bold px-6 py-3 rounded-lg transition-all duration-200 shadow-lg;
+    @apply bg-brand-green hover:bg-brand-green/90 text-white font-bold px-8 py-4 rounded-full transition-all duration-300 shadow-[0_0_20px_rgba(34,197,94,0.3)] hover:scale-105;
   }
   
-  .btn-gold {
-    @apply bg-emerald hover:bg-[#005a30] text-white font-bold px-6 py-3 rounded-lg transition-all duration-200 shadow-lg;
+  .btn-outline {
+    @apply bg-transparent hover:bg-white/10 text-white border-2 border-white/20 font-bold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105;
   }
   
-  .card {
-    @apply bg-white rounded-2xl p-6 border border-slate-100 shadow-xl;
-  }
-  
-  .input-field {
-    @apply bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-navy placeholder-slate-400 focus:outline-none focus:border-navy focus:ring-1 focus:ring-navy transition-all;
+  .stat-card {
+    @apply flex flex-col;
   }
 
-  .text-gradient {
-    @apply text-vibrant-red;
+  .stat-value {
+    @apply text-4xl font-black text-white;
+  }
+
+  .stat-label {
+    @apply text-[10px] text-white/50 uppercase tracking-[0.2em] font-bold mt-1;
   }
 }

@@ -7,22 +7,30 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#FFFFFF',
+        background: '#041c14',
         navy: '#0A2551',
         'vibrant-red': '#E12C2C',
         emerald: '#00703B',
-        surface: '#FFFFFF',
-        surfaceLight: '#F8FAFC',
-        text: '#0A2551',
-        textMuted: '#64748B'
+        'pitch-dark': '#041c14',
+        'pitch-green': '#0a2e20',
+        'brand-yellow': '#f6e05e',
+        'brand-green': '#22c55e',
+        surface: '#0a2e20',
+        text: '#FFFFFF',
+        textMuted: '#a0aec0'
       },
       fontFamily: {
         outfit: ['Outfit', 'sans-serif'],
         montserrat: ['Montserrat', 'sans-serif'],
       },
-      backgroundImage: {
-        'gradient-2026': 'linear-gradient(135deg, #0A2551 0%, #E12C2C 100%)',
-        'pattern-2026': "url('https://www.fifa.com/static-assets/fifacom/images/identity/fwc2026/background-pattern.png')", // Placeholder if needed
+      animation: {
+        'marquee': 'marquee 40s linear infinite',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        }
       }
     },
   },
