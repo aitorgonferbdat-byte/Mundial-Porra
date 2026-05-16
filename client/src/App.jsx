@@ -19,54 +19,48 @@ function App() {
   const [bracket, setBracket] = useState(KNOCKOUT_BRACKET);
   const [loading, setLoading] = useState(true);
 
-  // Escuchador de Persistencia de Sesión
+  // Escuchador de Persistencia de Sesión y Redirección
   useEffect(() => {
-    // Verificar si venimos de un redireccionamiento de Google
-    const checkRedirect = async () => {
+    const initAuth = async () => {
+      // 1. Verificar si venimos de un redireccionamiento de Google
       try {
         const result = await getRedirectResult(auth);
         if (result?.user) {
-          handleLoginSuccess(result.user);
+          await handleLoginSuccess(result.user);
         }
       } catch (err) {
         console.error("Error en redireccionamiento:", err);
       }
-    };
-    checkRedirect();
 
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        // Guardar en localStorage para acceso rápido
-        localStorage.setItem('user_name', currentUser.displayName || '');
-        localStorage.setItem('user_email', currentUser.email || '');
+      // 2. Escuchar cambios de estado de autenticación
+      onAuthStateChanged(auth, async (currentUser) => {
+        if (currentUser) {
+          setUser(currentUser);
+          localStorage.setItem('user_name', currentUser.displayName || '');
+          localStorage.setItem('user_email', currentUser.email || '');
 
-        // Intentar cargar perfil de Firestore
-        try {
-          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-          if (userDoc.exists()) {
-            setUserData(userDoc.data());
-            // Si el usuario ya está logueado y está en la pantalla de login, mandarlo a home
-            if (step === 'login') setStep('home');
-          } else {
-            // Si no tiene perfil pero está logueado, mandarlo a registro de perfil
-            if (step !== 'rules' && step !== 'leaderboard') setStep('registration');
+          // Cargar datos de perfil si existen
+          try {
+            const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+            if (userDoc.exists()) {
+              setUserData(userDoc.data());
+            }
+          } catch (err) {
+            console.error("Error al cargar datos de Firestore:", err);
           }
-        } catch (err) {
-          console.error("Error al cargar datos de Firestore:", err);
+        } else {
+          setUser(null);
+          setUserData(null);
+          localStorage.removeItem('user_name');
+          localStorage.removeItem('user_email');
         }
-      } else {
-        setUser(null);
-        setUserData(null);
-        localStorage.removeItem('user_name');
-        localStorage.removeItem('user_email');
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
-  }, [step]);
+        setLoading(false);
+      });
+    };
 
-  // Manejo del botón principal "Crear mi porra"
+    initAuth();
+  }, []);
+
   const handleStart = () => {
     if (!user) {
       setStep('login');
@@ -79,7 +73,6 @@ function App() {
 
   const handleLoginSuccess = async (loggedUser) => {
     setUser(loggedUser);
-    setLoading(true);
     try {
       const userDoc = await getDoc(doc(db, 'users', loggedUser.uid));
       if (userDoc.exists()) {
@@ -90,8 +83,6 @@ function App() {
       }
     } catch (err) {
       setStep('registration');
-    } finally {
-      setLoading(false);
     }
   };
 

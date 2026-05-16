@@ -15,8 +15,10 @@ const Login = ({ onLogin, onBack }) => {
     setLoading(true);
     try {
       // Intentamos con Popup primero
-      await signInWithPopup(auth, googleProvider);
-      // El resultado lo maneja onAuthStateChanged en App.jsx
+      const result = await signInWithPopup(auth, googleProvider);
+      if (result?.user) {
+        onLogin(result.user);
+      }
     } catch (err) {
       console.error("Google Popup Error:", err);
       
