@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Home from './components/Home';
 import Login from './components/Login';
 import Registration from './components/Registration';
@@ -9,12 +9,68 @@ import Leaderboard from './components/Leaderboard';
 import AdminPanel from './components/AdminPanel';
 import Rules from './components/Rules';
 import { GROUP_MATCHES, KNOCKOUT_BRACKET } from './data/teams';
+import { auth, onAuthStateChanged, signOut, db, doc, getDoc } from './lib/firebase';
 
 function App() {
   const [step, setStep] = useState('home'); // home, login, registration, groups, bracket, submission, leaderboard, admin, rules
+  const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [groupMatches, setGroupMatches] = useState(GROUP_MATCHES);
   const [bracket, setBracket] = useState(KNOCKOUT_BRACKET);
+  const [loading, setLoading] = useState(true);
+
+  // Auth Listener
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser);
+        // Check if user has a profile in Firestore
+        try {
+          const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+          if (userDoc.exists()) {
+            setUserData(userDoc.data());
+          }
+        } catch (err) {
+          console.error("Error fetching user data:", err);
+        }
+      } else {
+        setUser(null);
+        setUserData(null);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleStart = () => {
+    if (!user) {
+      setStep('login');
+    } else if (!userData) {
+      setStep('registration');
+    } else {
+      setStep('groups');
+    }
+  };
+
+  const handleLoginComplete = async (loggedUser) => {
+    setUser(loggedUser);
+    try {
+      const userDoc = await getDoc(doc(db, 'users', loggedUser.uid));
+      if (userDoc.exists()) {
+        setUserData(userDoc.data());
+        setStep('home');
+      } else {
+        setStep('registration');
+      }
+    } catch (err) {
+      setStep('registration');
+    }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    setStep('home');
+  };
 
   const handleRegistrationComplete = (data) => {
     setUserData(data);
@@ -31,10 +87,15 @@ function App() {
 
   const handleSubmitComplete = () => {
     setStep('leaderboard');
-    setUserData(null);
     setGroupMatches(GROUP_MATCHES);
     setBracket(KNOCKOUT_BRACKET);
   };
+
+  if (loading) return (
+    <div className="min-h-screen bg-pitch-dark flex items-center justify-center">
+      <div className="w-12 h-12 border-4 border-brand-green border-t-transparent rounded-full animate-spin"></div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-pitch-dark text-white font-outfit">
@@ -73,14 +134,28 @@ function App() {
             ))}
           </nav>
 
-          {/* Right: Login Button */}
-          <div className="flex-1 flex justify-end">
-            <button 
-              onClick={() => setStep('login')}
-              className="bg-brand-green/20 hover:bg-brand-green/30 text-brand-green px-8 py-2.5 rounded-full text-sm font-black border border-brand-green/30 transition-all hover:scale-105"
-            >
-              Entrar
-            </button>
+          {/* Right: Login Button or User info */}
+          <div className="flex-1 flex justify-end items-center gap-6">
+            {user ? (
+              <div className="flex items-center gap-4">
+                <span className="text-xs font-bold text-white/40 uppercase tracking-widest truncate max-w-[100px]">
+                  {userData?.nickname || user.email.split('@')[0]}
+                </span>
+                <button 
+                  onClick={handleLogout}
+                  className="text-[10px] font-black uppercase tracking-widest text-red-500/50 hover:text-red-500 transition-colors"
+                >
+                  Salir
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={() => setStep('login')}
+                className="bg-brand-green/20 hover:bg-brand-green/30 text-brand-green px-8 py-2.5 rounded-full text-sm font-black border border-brand-green/30 transition-all hover:scale-105"
+              >
+                Entrar
+              </button>
+            )}
           </div>
         </header>
       )}
@@ -89,19 +164,19 @@ function App() {
       <main>
         {step === 'home' && (
           <Home 
-            onStart={() => setStep('registration')} 
+            onStart={handleStart} 
             onRules={() => setStep('rules')} 
             onLeaderboard={() => setStep('leaderboard')} 
           />
         )}
 
         {step === 'login' && (
-          <Login onBack={() => setStep('home')} onLogin={() => setStep('leaderboard')} />
+          <Login onBack={() => setStep('home')} onLogin={handleLoginComplete} />
         )}
 
         {step === 'registration' && (
           <div className="max-w-4xl mx-auto py-12 px-6">
-            <Registration onComplete={handleRegistrationComplete} />
+            <Registration user={user} onComplete={handleRegistrationComplete} />
           </div>
         )}
         
