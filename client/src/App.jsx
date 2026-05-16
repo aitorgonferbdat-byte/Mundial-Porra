@@ -40,9 +40,9 @@ function App() {
     <div className="min-h-screen bg-pitch-dark text-white font-outfit">
       {/* Header - Hidden on Login screen */}
       {step !== 'login' && (
-        <header className="py-6 px-10 flex items-center justify-between sticky top-0 z-[100] backdrop-blur-xl border-b border-white/5">
-          {/* Logo & Social */}
-          <div className="flex items-center gap-8">
+        <header className="py-6 px-10 flex items-center sticky top-0 z-[100] backdrop-blur-xl border-b border-white/5">
+          {/* Left: Logo & Social */}
+          <div className="flex-1 flex items-center gap-8">
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setStep('home')}>
               <img src="/logo.png" alt="Logo" className="h-10 group-hover:scale-110 transition-transform" 
                 onError={(e) => e.target.src = "https://cdn-icons-png.flaticon.com/512/5329/5329948.png"} 
@@ -51,15 +51,15 @@ function App() {
             </div>
             
             <div className="hidden md:flex items-center gap-4 text-white/40">
+              <svg className="w-5 h-5 fill-current hover:text-white transition-colors cursor-pointer" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
               <svg className="w-5 h-5 fill-current hover:text-white transition-colors cursor-pointer" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
               <svg className="w-5 h-5 fill-current hover:text-white transition-colors cursor-pointer" viewBox="0 0 448 512"><path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/></svg>
             </div>
           </div>
 
-          {/* Navigation */}
-          <nav className="hidden lg:flex items-center gap-12">
+          {/* Center: Navigation */}
+          <nav className="hidden lg:flex items-center gap-12 justify-center">
             {[
-              { id: 'registration', label: 'Participar' },
               { id: 'leaderboard', label: 'Clasificación' },
               { id: 'rules', label: 'Reglas' }
             ].map((item) => (
@@ -73,13 +73,15 @@ function App() {
             ))}
           </nav>
 
-          {/* Login Button */}
-          <button 
-            onClick={() => setStep('login')}
-            className="bg-brand-green/20 hover:bg-brand-green/30 text-brand-green px-6 py-2 rounded-full text-sm font-bold border border-brand-green/30 transition-all hover:scale-105"
-          >
-            Entrar
-          </button>
+          {/* Right: Login Button */}
+          <div className="flex-1 flex justify-end">
+            <button 
+              onClick={() => setStep('login')}
+              className="bg-brand-green/20 hover:bg-brand-green/30 text-brand-green px-8 py-2.5 rounded-full text-sm font-black border border-brand-green/30 transition-all hover:scale-105"
+            >
+              Entrar
+            </button>
+          </div>
         </header>
       )}
 
