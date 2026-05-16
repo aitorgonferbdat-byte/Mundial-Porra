@@ -1,4 +1,10 @@
+import { useState, useRef } from 'react';
 import { db, doc, setDoc } from '../lib/firebase';
+import { CheckCircle, Trophy, Download } from 'lucide-react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import Flag from './Flag';
+import { api } from '../utils/api';
 
 const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
   const [loading, setLoading] = useState(false);
@@ -10,20 +16,26 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
   const handleDownloadPDF = async () => {
     if (!summaryRef.current) return;
     
-    const canvas = await html2canvas(summaryRef.current);
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-    
-    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`Porra_Mundial_2026_${userData.nickname}.pdf`);
+    try {
+      const canvas = await html2canvas(summaryRef.current, {
+        backgroundColor: '#041c14',
+        scale: 2
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Porra_Mundial_2026_${userData?.nickname || 'usuario'}.pdf`);
+    } catch (err) {
+      console.error("Error al generar PDF:", err);
+    }
   };
 
   const handleSubmit = async () => {
-    if (!userData?.name) {
-      setError('Error: No se encontró el nombre del usuario.');
+    if (!userData?.nickname) {
+      setError('Error: No se encontró el perfil del usuario.');
       return;
     }
 
@@ -31,34 +43,52 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
     setError('');
 
     try {
-      // Prepare match results
+      // Preparar resultados de la predicción
       const matchResults = {
         groups: groupMatches,
         knockout: bracket
       };
 
-      // Get champion and runner-up from bracket
+      // Obtener campeón y subcampeón
       const champion = bracket.final[0]?.winner;
       const runnerUp = bracket.final[0]?.homeTeam === champion 
         ? bracket.final[0]?.awayTeam 
         : bracket.final[0]?.homeTeam;
 
-      // Save to Firebase Firestore
-      // Colección 'usuarios', documento con ID = nombre del amigo
-      await setDoc(doc(db, "usuarios", userData.name), {
-        user: userData,
+      // Guardar en Firebase Firestore usando el UID del usuario para que sea único
+      const docId = userData.uid || userData.nickname;
+
+      await setDoc(doc(db, "usuarios", docId), {
+        user: {
+          name: userData.name,
+          nickname: userData.nickname,
+          email: userData.email,
+          uid: userData.uid || null
+        },
         predictions: matchResults,
-        champion,
-        runnerUp,
+        champion: champion || 'Desconocido',
+        runnerUp: runnerUp || 'Desconocido',
         timestamp: new Date().toISOString()
       });
 
+      // Intentar enviar correo (ignorar error si falla para no bloquear el flujo)
+      try {
+        await api.sendPrediction({
+          user: userData,
+          matchResults,
+          champion,
+          runnerUp
+        });
+      } catch (mailErr) {
+        console.error("Error al enviar correo:", mailErr);
+      }
+
       setSuccess(true);
-      // Wait a bit longer to allow user to see success and download PDF
-      setTimeout(() => onComplete(), 10000);
+      // Auto-completar después de mostrar el éxito por 5 segundos
+      setTimeout(() => onComplete(), 5000);
     } catch (err) {
       console.error('Error saving to Firebase:', err);
-      setError('Error al conectar con la base de datos. Verifica tu conexión e inténtalo de nuevo.');
+      setError('Error al guardar en la base de datos. Asegúrate de tener permisos.');
     } finally {
       setLoading(false);
     }
@@ -66,33 +96,49 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="card max-w-md w-full text-center">
+      <div className="min-h-[70vh] flex items-center justify-center p-4">
+        <div className="bg-white/5 border border-white/10 rounded-3xl p-10 max-w-md w-full text-center backdrop-blur-xl">
           <div className="flex justify-center mb-6">
-            <CheckCircle className="w-20 h-20 text-green-500" />
+            <div className="w-20 h-20 bg-emerald/20 rounded-full flex items-center justify-center animate-bounce">
+              <CheckCircle className="w-10 h-10 text-emerald" />
+            </div>
           </div>
-          <h2 className="font-outfit text-2xl font-bold text-navy mb-2 uppercase">
-            ¡Predicción Confirmada!
+          <h2 className="text-2xl font-black text-white mb-2 uppercase tracking-tighter">
+            ¡Porra Entregada!
           </h2>
-          <p className="text-textMuted mb-6">
-            Tu predicción ha sido guardada correctamente. Buena suerte en el Mundial 2026.
+          <p className="text-white/40 text-sm mb-8 font-bold uppercase tracking-widest">
+            Tu predicción se ha guardado correctamente.
           </p>
-          <div ref={summaryRef} className="bg-slate-50 rounded-lg p-6 mb-6 border-2 border-emerald/20 shadow-inner">
-            <h3 className="text-navy font-black mb-4 font-outfit uppercase tracking-widest">Resumen Mundial 2026</h3>
-            <div className="text-sm text-slate-500 mb-2 font-medium">Participante: <span className="text-vibrant-red font-bold">{userData.name} (@{userData.nickname})</span></div>
-            <div className="flex items-center justify-center gap-8 mt-4">
-              <div className="text-center">
-                <div className="text-3xl mb-1">🥇</div>
-                <div className="text-[10px] text-slate-400 uppercase tracking-widest mb-1 font-bold">Campeón</div>
-                <div className="font-bold text-navy text-xl">{bracket.final[0]?.winner}</div>
+          
+          <div ref={summaryRef} className="bg-[#041c14] rounded-2xl p-8 mb-8 border border-white/10 text-left">
+            <h3 className="text-white/20 text-[10px] font-black mb-4 uppercase tracking-[0.3em]">Resumen Oficial 2026</h3>
+            <div className="mb-6">
+              <p className="text-white/40 text-[10px] font-bold uppercase mb-1">Participante</p>
+              <p className="text-xl font-black text-white leading-tight">{userData.nickname}</p>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-brand-green text-[10px] font-black uppercase mb-1">Campeón</p>
+                <div className="flex items-center gap-2">
+                  <Flag team={bracket.final[0]?.winner} className="w-6 h-4 rounded-sm" />
+                  <p className="text-sm font-bold text-white truncate">{bracket.final[0]?.winner}</p>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl mb-1">🥈</div>
-                <div className="text-[10px] text-slate-400 uppercase tracking-widest mb-1 font-bold">Subcampeón</div>
-                <div className="font-bold text-vibrant-red text-xl">
-                  {bracket.final[0]?.homeTeam === bracket.final[0]?.winner 
-                    ? bracket.final[0]?.awayTeam 
-                    : bracket.final[0]?.homeTeam}
+              <div>
+                <p className="text-white/40 text-[10px] font-black uppercase mb-1">Finalista</p>
+                <div className="flex items-center gap-2">
+                  <Flag 
+                    team={bracket.final[0]?.homeTeam === bracket.final[0]?.winner 
+                      ? bracket.final[0]?.awayTeam 
+                      : bracket.final[0]?.homeTeam} 
+                    className="w-6 h-4 rounded-sm opacity-50" 
+                  />
+                  <p className="text-sm font-bold text-white/50 truncate">
+                    {bracket.final[0]?.homeTeam === bracket.final[0]?.winner 
+                      ? bracket.final[0]?.awayTeam 
+                      : bracket.final[0]?.homeTeam}
+                  </p>
                 </div>
               </div>
             </div>
@@ -100,10 +146,10 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
           
           <button
             onClick={handleDownloadPDF}
-            className="w-full flex items-center justify-center gap-2 bg-navy hover:bg-navy/90 text-white font-bold py-3 px-6 rounded-lg transition-all mb-4 shadow-lg"
+            className="w-full flex items-center justify-center gap-3 bg-white/10 hover:bg-white/20 text-white font-black py-4 rounded-xl transition-all mb-4 uppercase tracking-widest text-xs"
           >
-            <Download className="w-5 h-5" />
-            Descargar Certificado Oficial
+            <Download className="w-4 h-4" />
+            Descargar Certificado PDF
           </button>
         </div>
       </div>
@@ -111,70 +157,39 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="card max-w-md w-full">
+    <div className="min-h-[70vh] flex items-center justify-center p-4">
+      <div className="bg-white/5 border border-white/10 rounded-3xl p-10 max-w-md w-full backdrop-blur-xl">
         <div className="text-center mb-8">
-          <Trophy className="w-16 h-16 text-gold mx-auto mb-4" />
-          <h2 className="font-montserrat text-2xl font-bold text-text mb-2">
-            Confirmar Predicción
+          <div className="w-16 h-16 bg-brand-green/20 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <Trophy className="w-8 h-8 text-brand-green" />
+          </div>
+          <h2 className="text-2xl font-black text-white mb-2 uppercase tracking-tighter">
+            Confirmar Entrega
           </h2>
-          <p className="text-textMuted">
-            Revisa tu predicción antes de enviarla
+          <p className="text-white/40 text-sm font-bold uppercase tracking-widest">
+            Revisa tu selección antes del envío final
           </p>
         </div>
 
-        <div className="space-y-4 mb-6">
-          <div className="bg-surfaceLight rounded-lg p-4">
-            <div className="text-sm text-textMuted mb-1">Usuario</div>
-            <div className="font-medium text-text">{userData.nickname}</div>
+        <div className="space-y-6 mb-10">
+          <div className="bg-white/5 rounded-2xl p-5 border border-white/5">
+            <p className="text-white/20 text-[10px] font-black uppercase mb-1">Participando como</p>
+            <p className="font-bold text-white text-lg">{userData.nickname}</p>
           </div>
 
-          <div className="bg-surfaceLight rounded-lg p-4">
-            <div className="text-sm text-textMuted mb-2">Predicción Final</div>
-            <div className="flex items-center justify-center gap-6">
-              <div className="text-center">
-                <div className="flex justify-center mb-2">
-                  <Flag team={bracket.final[0]?.winner} className="w-12 h-8" />
-                </div>
-                <div className="font-montserrat text-lg font-bold text-gold">
-                  {bracket.final[0]?.winner || '---'}
-                </div>
-              </div>
-              <div className="text-center">
-                <div className="flex justify-center mb-2">
-                  <Flag 
-                    team={bracket.final[0]?.homeTeam === bracket.final[0]?.winner 
-                      ? bracket.final[0]?.awayTeam 
-                      : bracket.final[0]?.homeTeam} 
-                    className="w-12 h-8" 
-                  />
-                </div>
-                <div className="font-montserrat text-lg font-bold text-accent">
-                  {bracket.final[0]?.homeTeam === bracket.final[0]?.winner 
-                    ? bracket.final[0]?.awayTeam 
-                    : bracket.final[0]?.homeTeam || '---'}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-surfaceLight rounded-lg p-4">
-            <div className="text-sm text-textMuted mb-2">Estadísticas</div>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span className="text-textMuted">Partidos grupos:</span>
-                <span className="text-text font-bold ml-2">72</span>
-              </div>
-              <div>
-                <span className="text-textMuted">Partidos eliminatorias:</span>
-                <span className="text-text font-bold ml-2">32</span>
-              </div>
+          <div className="bg-brand-green/5 rounded-2xl p-6 border border-brand-green/20 text-center">
+            <p className="text-brand-green text-[10px] font-black uppercase mb-4 tracking-widest">Tu Campeón Predicho</p>
+            <div className="flex flex-col items-center">
+              <Flag team={bracket.final[0]?.winner} className="w-20 h-14 rounded-lg shadow-2xl mb-4" />
+              <p className="text-2xl font-black text-white uppercase tracking-tighter">
+                {bracket.final[0]?.winner || 'Sin elegir'}
+              </p>
             </div>
           </div>
         </div>
 
         {error && (
-          <div className="bg-red-500/20 border border-red-500 text-red-400 px-4 py-3 rounded-lg text-sm mb-4">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-xs font-bold mb-6 text-center">
             {error}
           </div>
         )}
@@ -182,16 +197,16 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
         <div className="flex gap-4">
           <button
             onClick={() => window.history.back()}
-            className="flex-1 bg-surfaceLight hover:bg-surface text-text font-semibold px-6 py-3 rounded-lg transition-all"
+            className="flex-1 bg-white/5 hover:bg-white/10 text-white/40 font-black py-4 rounded-xl transition-all uppercase tracking-widest text-xs"
           >
-            Volver
+            Atrás
           </button>
           <button
             onClick={handleSubmit}
             disabled={loading}
-            className="flex-1 btn-gold disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-[2] bg-brand-green hover:bg-brand-green/90 text-white font-black py-4 rounded-xl shadow-lg shadow-brand-green/20 transition-all hover:scale-[1.02] disabled:opacity-50 uppercase tracking-widest text-xs"
           >
-            {loading ? 'Enviando...' : 'Confirmar y Enviar'}
+            {loading ? 'Enviando...' : 'Entregar Porra'}
           </button>
         </div>
       </div>
