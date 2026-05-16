@@ -6,7 +6,7 @@ import jsPDF from 'jspdf';
 import Flag from './Flag';
 import { api } from '../utils/api';
 
-const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
+const Submission = ({ userData, groupMatches, bracket, awards, onComplete }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -19,7 +19,9 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
     try {
       const canvas = await html2canvas(summaryRef.current, {
         backgroundColor: '#041c14',
-        scale: 2
+        scale: 2,
+        logging: false,
+        useCORS: true
       });
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF('p', 'mm', 'a4');
@@ -46,7 +48,8 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
       // Preparar resultados de la predicción
       const matchResults = {
         groups: groupMatches,
-        knockout: bracket
+        knockout: bracket,
+        awards: awards
       };
 
       // Obtener campeón y subcampeón
@@ -68,6 +71,7 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
         predictions: matchResults,
         champion: champion || 'Desconocido',
         runnerUp: runnerUp || 'Desconocido',
+        awards: awards,
         timestamp: new Date().toISOString()
       });
 
@@ -77,7 +81,8 @@ const Submission = ({ userData, groupMatches, bracket, onComplete }) => {
           user: userData,
           matchResults,
           champion,
-          runnerUp
+          runnerUp,
+          awards
         });
       } catch (mailErr) {
         console.error("Error al enviar correo:", mailErr);

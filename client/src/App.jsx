@@ -8,15 +8,17 @@ import Submission from './components/Submission';
 import Leaderboard from './components/Leaderboard';
 import AdminPanel from './components/AdminPanel';
 import Rules from './components/Rules';
+import Awards from './components/Awards';
 import { GROUP_MATCHES, KNOCKOUT_BRACKET } from './data/teams';
 import { auth, onAuthStateChanged, signOut, db, doc, getDoc, getRedirectResult } from './lib/firebase';
 
 function App() {
-  const [step, setStep] = useState('home'); // home, login, registration, groups, bracket, submission, leaderboard, admin, rules
+  const [step, setStep] = useState('home'); // home, login, registration, groups, bracket, awards, submission, leaderboard, admin, rules
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [groupMatches, setGroupMatches] = useState(GROUP_MATCHES);
   const [bracket, setBracket] = useState(KNOCKOUT_BRACKET);
+  const [awards, setAwards] = useState(null);
   const [loading, setLoading] = useState(true);
 
   // Escuchador de Persistencia de Sesión y Redirección
@@ -112,6 +114,11 @@ function App() {
   };
 
   const handleBracketSubmit = () => {
+    setStep('awards');
+  };
+
+  const handleAwardsComplete = (awardsData) => {
+    setAwards(awardsData);
     setStep('submission');
   };
 
@@ -119,6 +126,7 @@ function App() {
     setStep('leaderboard');
     setGroupMatches(GROUP_MATCHES);
     setBracket(KNOCKOUT_BRACKET);
+    setAwards(null);
   };
 
   // Pantalla de Carga Inicial
@@ -236,6 +244,13 @@ function App() {
             />
           </div>
         )}
+
+        {step === 'awards' && (
+          <Awards 
+            onNext={handleAwardsComplete} 
+            onBack={() => setStep('bracket')} 
+          />
+        )}
         
         {step === 'submission' && (
           <div className="max-w-4xl mx-auto py-12 px-6">
@@ -243,6 +258,7 @@ function App() {
               userData={userData}
               groupMatches={groupMatches}
               bracket={bracket}
+              awards={awards}
               onComplete={handleSubmitComplete}
             />
           </div>
