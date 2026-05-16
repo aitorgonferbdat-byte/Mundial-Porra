@@ -19,29 +19,41 @@ function App() {
   const [bracket, setBracket] = useState(KNOCKOUT_BRACKET);
   const [loading, setLoading] = useState(true);
 
-  // Auth Listener
+  // Escuchador de Persistencia de Sesión
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-        // Check if user has a profile in Firestore
+        // Guardar en localStorage para acceso rápido
+        localStorage.setItem('user_name', currentUser.displayName || '');
+        localStorage.setItem('user_email', currentUser.email || '');
+
+        // Intentar cargar perfil de Firestore
         try {
           const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
           if (userDoc.exists()) {
             setUserData(userDoc.data());
+            // Si el usuario ya está logueado y está en la pantalla de login, mandarlo a home
+            if (step === 'login') setStep('home');
+          } else {
+            // Si no tiene perfil pero está logueado, mandarlo a registro de perfil
+            if (step !== 'rules' && step !== 'leaderboard') setStep('registration');
           }
         } catch (err) {
-          console.error("Error fetching user data:", err);
+          console.error("Error al cargar datos de Firestore:", err);
         }
       } else {
         setUser(null);
         setUserData(null);
+        localStorage.removeItem('user_name');
+        localStorage.removeItem('user_email');
       }
       setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [step]);
 
+  // Manejo del botón principal "Crear mi porra"
   const handleStart = () => {
     if (!user) {
       setStep('login');
@@ -52,8 +64,9 @@ function App() {
     }
   };
 
-  const handleLoginComplete = async (loggedUser) => {
+  const handleLoginSuccess = async (loggedUser) => {
     setUser(loggedUser);
+    setLoading(true);
     try {
       const userDoc = await getDoc(doc(db, 'users', loggedUser.uid));
       if (userDoc.exists()) {
@@ -64,12 +77,18 @@ function App() {
       }
     } catch (err) {
       setStep('registration');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLogout = async () => {
-    await signOut(auth);
-    setStep('home');
+    try {
+      await signOut(auth);
+      setStep('home');
+    } catch (err) {
+      console.error("Error al cerrar sesión:", err);
+    }
   };
 
   const handleRegistrationComplete = (data) => {
@@ -91,18 +110,22 @@ function App() {
     setBracket(KNOCKOUT_BRACKET);
   };
 
+  // Pantalla de Carga Inicial
   if (loading) return (
     <div className="min-h-screen bg-pitch-dark flex items-center justify-center">
-      <div className="w-12 h-12 border-4 border-brand-green border-t-transparent rounded-full animate-spin"></div>
+      <div className="flex flex-col items-center gap-6">
+        <div className="w-16 h-16 border-4 border-brand-green border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-white/20 text-xs font-black uppercase tracking-widest">Cargando Porrita...</p>
+      </div>
     </div>
   );
 
   return (
     <div className="min-h-screen bg-pitch-dark text-white font-outfit">
-      {/* Header - Hidden on Login screen */}
+      {/* Header - Oculto en Login */}
       {step !== 'login' && (
         <header className="py-6 px-10 flex items-center sticky top-0 z-[100] backdrop-blur-xl border-b border-white/5">
-          {/* Left: Logo & Social */}
+          {/* Logo & Social */}
           <div className="flex-1 flex items-center gap-8">
             <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setStep('home')}>
               <img src="/logo.png" alt="Logo" className="h-10 group-hover:scale-110 transition-transform" 
@@ -118,7 +141,7 @@ function App() {
             </div>
           </div>
 
-          {/* Center: Navigation */}
+          {/* Navigation */}
           <nav className="hidden lg:flex items-center gap-12 justify-center">
             {[
               { id: 'leaderboard', label: 'Clasificación' },
@@ -134,18 +157,20 @@ function App() {
             ))}
           </nav>
 
-          {/* Right: Login Button or User info */}
+          {/* User Section */}
           <div className="flex-1 flex justify-end items-center gap-6">
             {user ? (
               <div className="flex items-center gap-4">
-                <span className="text-xs font-bold text-white/40 uppercase tracking-widest truncate max-w-[100px]">
-                  {userData?.nickname || user.email.split('@')[0]}
-                </span>
+                <div className="text-right">
+                  <p className="text-[10px] font-black uppercase text-brand-green tracking-widest leading-none mb-1">En línea</p>
+                  <p className="text-xs font-bold text-white/60 truncate max-w-[120px]">{userData?.nickname || user.displayName || user.email.split('@')[0]}</p>
+                </div>
                 <button 
                   onClick={handleLogout}
-                  className="text-[10px] font-black uppercase tracking-widest text-red-500/50 hover:text-red-500 transition-colors"
+                  className="bg-white/5 hover:bg-red-500/10 text-white/20 hover:text-red-500 p-2.5 rounded-full transition-all border border-white/5"
+                  title="Cerrar sesión"
                 >
-                  Salir
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M16 13v-2H7V8l-5 4 5 4v-3h9zM20 3H9c-1.1 0-2 .9-2 2v4h2V5h11v14H9v-4H7v4c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
                 </button>
               </div>
             ) : (
@@ -171,7 +196,7 @@ function App() {
         )}
 
         {step === 'login' && (
-          <Login onBack={() => setStep('home')} onLogin={handleLoginComplete} />
+          <Login onBack={() => setStep('home')} onLogin={handleLoginSuccess} />
         )}
 
         {step === 'registration' && (
