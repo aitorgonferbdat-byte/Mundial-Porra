@@ -84,7 +84,7 @@ const Login = ({ onLogin, onBack }) => {
       <div className="hidden lg:flex w-1/2 bg-emerald items-center justify-center relative">
         <div className="flex flex-col items-center">
           <img 
-            src="/logo.png" 
+            src="/jugador.png" 
             alt="La Porrita" 
             className="w-56 h-56 object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.2)]"
           />

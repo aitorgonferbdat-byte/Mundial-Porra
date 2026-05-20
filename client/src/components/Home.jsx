@@ -137,7 +137,7 @@ const Home = ({ onStart, onRules, onLeaderboard }) => {
             <div className="relative w-full max-w-2xl flex items-center justify-center mb-16 group">
               <div className="absolute inset-0 bg-brand-green/20 blur-[100px] rounded-full group-hover:bg-brand-green/30 transition-all duration-700"></div>
               <img 
-                src="/logo.png" 
+                src="/jugador.png" 
                 alt="La Porrita" 
                 className="relative w-full h-auto object-contain drop-shadow-[0_0_80px_rgba(34,197,94,0.6)] transform group-hover:scale-105 transition-transform duration-700"
               />
