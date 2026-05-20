@@ -134,13 +134,12 @@ const Home = ({ onStart, onRules, onLeaderboard }) => {
 
           {/* Right Content */}
           <div className="relative flex flex-col items-center justify-center z-10 order-1 lg:order-2">
-            <div className="relative w-full max-w-md aspect-square flex items-center justify-center mb-16 group">
+            <div className="relative w-full max-w-2xl flex items-center justify-center mb-16 group">
               <div className="absolute inset-0 bg-brand-green/20 blur-[100px] rounded-full group-hover:bg-brand-green/30 transition-all duration-700"></div>
-              <div className="absolute inset-0 border-2 border-dashed border-white/5 rounded-full animate-[spin_20s_linear_infinite]"></div>
               <img 
                 src="/logo.png" 
                 alt="La Porrita" 
-                className="relative w-[90%] h-[90%] object-contain drop-shadow-[0_0_80px_rgba(34,197,94,0.6)] transform group-hover:scale-110 transition-transform duration-700"
+                className="relative w-full h-auto object-contain drop-shadow-[0_0_80px_rgba(34,197,94,0.6)] transform group-hover:scale-105 transition-transform duration-700"
               />
             </div>
 
