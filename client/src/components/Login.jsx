@@ -86,7 +86,7 @@ const Login = ({ onLogin, onBack }) => {
           <img 
             src="/jugador.png" 
             alt="La Porrita" 
-            className="w-56 h-56 object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.2)]"
+            className="w-96 h-96 lg:w-[450px] lg:h-[450px] xl:w-[550px] xl:h-[550px] object-contain drop-shadow-[0_0_50px_rgba(255,255,255,0.2)] transform hover:scale-105 transition-transform duration-500"
           />
           <span className="text-white/40 text-xs font-black mt-8 tracking-widest uppercase">v0.5.02</span>
         </div>
