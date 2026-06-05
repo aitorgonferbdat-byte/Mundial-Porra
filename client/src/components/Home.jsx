@@ -2,21 +2,23 @@ import { useState, useEffect } from 'react';
 import { getFlag } from '../utils/flags';
 
 const Home = ({ onStart, onRules, onLeaderboard }) => {
-  const [timeLeft, setTimeLeft] = useState({
-    meses: 0,
-    dias: 25,
-    horas: 7,
-    minutos: 10,
-    segundos: 12
-  });
+  const TARGET_DATE = new Date('2026-06-11T21:00:00');
+
+  const calcTimeLeft = () => {
+    const diff = TARGET_DATE - new Date();
+    if (diff <= 0) return { dias: 0, horas: 0, minutos: 0, segundos: 0 };
+    const dias = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutos = Math.floor((diff / (1000 * 60)) % 60);
+    const segundos = Math.floor((diff / 1000) % 60);
+    return { dias, horas, minutos, segundos };
+  };
+
+  const [timeLeft, setTimeLeft] = useState(calcTimeLeft());
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev.segundos > 0) return { ...prev, segundos: prev.segundos - 1 };
-        if (prev.minutos > 0) return { ...prev, minutos: prev.minutos - 1, segundos: 59 };
-        return prev;
-      });
+      setTimeLeft(calcTimeLeft());
     }, 1000);
     return () => clearInterval(timer);
   }, []);
@@ -145,9 +147,8 @@ const Home = ({ onStart, onRules, onLeaderboard }) => {
 
             <div className="w-full max-w-sm">
               <p className="text-center text-[10px] font-black text-white/30 uppercase tracking-[0.4em] mb-6">El mundial empieza en:</p>
-              <div className="grid grid-cols-5 gap-4">
+              <div className="grid grid-cols-4 gap-4">
                 {[
-                  { label: 'Meses', value: timeLeft.meses },
                   { label: 'Días', value: timeLeft.dias },
                   { label: 'Horas', value: timeLeft.horas },
                   { label: 'Minutos', value: timeLeft.minutos },
